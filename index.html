@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang = "en">
+	<head>
+		<!-- Site developer: Luka Vladimirov -->
+		<meta charset = "utf-8">
+		<link href = "style.css" rel = "stylesheet">
+		<link href = "imgs/logo.png" rel = "icon">
+		<title>ProAthletesPerformance</title>
+		<script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+		<script>
+			window.onload = function() {
+				function loop() {
+					if (isContacts) {
+						$("#aboutus").removeClass("underline");
+						$("#contacts").addClass("underline");
+						$("#signup").removeClass("underline");
+						$("#main").removeClass("underline");
+
+						$("#aboutusdiv").css("display", "none");
+						$("#contactsdiv").css("display", "block");
+						$("#signupdiv").css("display", "none");
+						$("#maindiv").css("display", "none");
+					} else if (isAboutUs) {
+						$("#aboutus").addClass("underline");
+						$("#contacts").removeClass("underline");
+						$("#signup").removeClass("underline");
+						$("#main").removeClass("underline");
+
+						$("#aboutusdiv").css("display", "block");
+						$("#contactsdiv").css("display", "none");
+						$("#signupdiv").css("display", "none");
+						$("#maindiv").css("display", "none");
+					} else if (isSignUp) {
+						$("#aboutus").removeClass("underline");
+						$("#contacts").removeClass("underline");
+						$("#signup").addClass("underline");
+						$("#main").removeClass("underline");
+
+						$("#aboutusdiv").css("display", "none");
+						$("#contactsdiv").css("display", "none");
+						$("#signupdiv").css("display", "block");
+						$("#maindiv").css("display", "none");
+					} else if (isMain) {
+						$("#aboutus").removeClass("underline");
+						$("#contacts").removeClass("underline");
+						$("#signup").removeClass("underline");
+						$("#main").addClass("underline");
+
+						$("#aboutusdiv").css("display", "none");
+						$("#contactsdiv").css("display", "none");
+						$("#signupdiv").css("display", "none");
+						$("#maindiv").css("display", "block");
+					}
+
+					let windowHeight = window.innerHeight;
+					let divHeight = windowHeight - 110;
+					$("#aboutusdiv").css("height", divHeight + "px");
+
+					if (($("#firstname").is(":focus")) && (document.getElementById("firstname").value.length > 0)) {$("#firstname").removeClass("inputApplyFormErrorSmall");}
+					if (($("#secondname").is(":focus")) && (document.getElementById("secondname").value.length > 0)) {$("#secondname").removeClass("inputApplyFormErrorSmall");}
+					if (($("#age").is(":focus")) && (document.getElementById("age").value.length > 0)) {$("#age").removeClass("inputApplyFormErrorBig");}
+					if (($("#sporttype").is(":focus")) && (document.getElementById("sporttype").value.length > 0)) {$("#sporttype").removeClass("inputApplyFormErrorBig");}
+					if (($("#citycountry").is(":focus")) && (document.getElementById("citycountry").value.length > 0)) {$("#citycountry").removeClass("inputApplyFormErrorBig");}
+					if (($("#contactinfo").is(":focus")) && (document.getElementById("contactinfo").value.length > 0)) {$("#contactinfo").removeClass("inputApplyFormErrorBig");}
+				} setInterval(loop, 200);}
+
+			let isContacts = false;
+			let isAboutUs = false;
+			let isSignUp = false;
+			let isMain = true;
+
+			function buttonOnClick(button) {
+				if (button == "contacts") {
+					isContacts = true;
+					isAboutUs = false;
+					isSignUp = false;
+					isMain = false;
+				} else if (button == "aboutus") {
+					isContacts = false;
+					isAboutUs = true;
+					isSignUp = false;
+					isMain = false;
+				} else if (button == "signup") {
+					isContacts = false;
+					isAboutUs = false;
+					isSignUp = true;
+					isMain = false;
+				} else if (button == "main") {
+					isContacts = false;
+					isAboutUs = false;
+					isSignUp = false;
+					isMain = true;
+				}
+			}
+		</script>
+		<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+	    <script>(function() {emailjs.init("7y8lNobQEw-hg8vkA");})();</script>
+		<script>
+			let isEmailSent = false;
+
+			function sendEmail() {
+				let first_name = document.getElementById("firstname").value
+				let second_name = document.getElementById("secondname").value
+				let age = document.getElementById("age").value
+				let sport_type = document.getElementById("sporttype").value
+				let city_country = document.getElementById("citycountry").value
+				let contact_info = document.getElementById("contactinfo").value
+
+				if ((!isEmailSent) && (first_name.length > 0) && (second_name.length > 0) && (age.length > 0) && (sport_type.length > 0) && (city_country.length > 0) && (contact_info.length > 0)) {
+					isEmailSent = true;
+
+					const day = new Date();
+					let h = day.getHours();
+					let m = day.getMinutes();
+					let timeString = h.toString() + ":" + m.toString();
+					
+					let month = day.getMonth();
+					if (month == 0) {month = "Jan"}
+					else if (month == 1) {month = "Feb"}
+					else if (month == 2) {month = "Mar"}
+					else if (month == 3) {month = "Apr"}
+					else if (month == 4) {month = "May"}
+					else if (month == 5) {month = "Jun"}
+					else if (month == 6) {month = "Jul"}
+					else if (month == 7) {month = "Aug"}
+					else if (month == 8) {month = "Sep"}
+					else if (month == 9) {month = "Oct"}
+					else if (month == 10) {month = "Nov"}
+					else if (month == 11) {month = "Dec"}
+					timeString = day.getDate() + " " + month + " " + day.getFullYear() + ", " + timeString + ".";
+
+					let params = {
+						first_name: first_name,
+						second_name: second_name,
+						age: age,
+						sport_type: sport_type,
+						city_country: city_country,
+						contact_info: contact_info,
+						time: timeString
+					}; emailjs.send("service_k36usty", "template_1008xhs", params);
+
+					$("#form").css("display", "none");
+					$("#formsenttext").css("display", "block");
+				} else {
+					if (first_name.length == 0) {$("#firstname").addClass("inputApplyFormErrorSmall");}
+					if (second_name.length == 0) {$("#secondname").addClass("inputApplyFormErrorSmall");}
+					if (age.length == 0) {$("#age").addClass("inputApplyFormErrorBig");}
+					if (sport_type.length == 0) {$("#sporttype").addClass("inputApplyFormErrorBig");}
+					if (city_country.length == 0) {$("#citycountry").addClass("inputApplyFormErrorBig");}
+					if (contact_info.length == 0) {$("#contactinfo").addClass("inputApplyFormErrorBig");}
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<div class = "buttonBar">
+			<div class = "buttonBarLogo">
+				<img src = "imgs/logo.png" style = "height:60px; margin-left:8px; user-select:none;">
+				<img src = "imgs/logotext.png" style = "height:40px; padding-bottom:10px; padding-left:10px; user-select:none;">
+			</div>
+			<div class = "buttonBarFirstButton" onclick = 'buttonOnClick("aboutus")'><span id = "aboutus">About Us</span></div>			
+			<div class = "buttonBarSecondButton" onclick = 'buttonOnClick("contacts")'><span id = "contacts">Contacts</span></div>
+			<div class = "buttonBarThirdButton" onclick = 'buttonOnClick("signup")'><span id = "signup">Apply</span></div>	
+			<div class = "buttonBarFourthButton" onclick = 'buttonOnClick("main")'><span id = "main">Main</span></div>	
+		</div>
+		<div class = "bodyDiv">
+			<div class = "bodyUnderDiv" id = "maindiv">
+				<h1 style = "margin-top:20px; text-align:center;">Main information</h1>
+				<p style = "margin-right:20%; margin-left:20%; margin-top:10px; text-align:justify;">
+					The <b>PAP</b> (ProAthletesPerformance) organization is engaged in the
+					development of professional athletes and young promising kids who have a
+					professional view of sports. We support our clients in all aspects of their professional
+					careers and personal lives. We develop and promote the client during the whole
+					season.
+				</p>
+			</div>
+			<div class = "bodyUnderDiv" id = "signupdiv">
+				<div class = "formDiv" id = "form">
+					<input class = "inputApplyForm" style = "width:160px; margin-top:24px;" type = "text" placeholder = "Name:" id = "firstname">
+					<input class = "inputApplyForm" style = "width:160px; margin-left:3px;" type = "text" placeholder = "Surname:" id = "secondname"><br>
+					<input class = "inputApplyForm" type = "text" placeholder = "Age:" id = "age"><br>
+					<input class = "inputApplyForm" type = "text" placeholder = "Kind of Sport:" id = "sporttype"><br>
+					<input class = "inputApplyForm" type = "text" placeholder = "Your Country and City:" id = "citycountry"><br>
+					<input class = "inputApplyForm" type = "text" placeholder = "Your Contact Info (E-mail, phone number):" id = "contactinfo"><br>
+					<button class = "sendButtonApplyForm" onclick = "sendEmail();">Send</button>
+				</div>
+				<p style = "display:none; text-align:center; margin-left:30%; margin-right:30%; margin-top:30px;" id = "formsenttext">Your application has been sent and it will be reviewed as soon as possible.</p>
+			</div>
+			<div class = "bodyUnderDiv" id = "contactsdiv">
+				<p style = "padding-left:74px; padding-bottom:36px; font-size:26px;"><b>PAP</b> contact information and bank details.</p>
+				<ul>
+					<li>E-mail<span style = "padding-left:1px;">:</span><span class = "copyText" style = "padding-left:293px;" id = "email" onclick = 'copy("email");'>proplayersperformance@gmail.com</span></li>
+					<li>Phone number (Germany, Krefeld)<span style = "padding-left:1px;">:</span><span style = "padding-left:72.5px;"><span class = "copyText" id = "phonenumbergermany" onclick = 'copy("phonenumbergermany")'>+49 1742591682</span><span style = "padding-left:9px;">(What’s App, Telegram)</span></span></li>
+					<li>Phone number (Latvia, Riga)<span style = "padding-left:1px;">:</span><span style = "padding-left:118px;"><span class = "copyText" id = "phonenumberlatvia" onclick = 'copy("phonenumberlatvia")'>+371 28 375 043</span> (What’s App, Telegram)</span></li>
+					<li>Germany <i>Sparkasse</i><span style = "padding-left:2px;">:</span><span class = "copyText" style = "padding-left:182px;" id = "germanysparkasse" onclick = 'copy("germanysparkasse")'>DE38 3205 0000 0003 5503 40</span></li>
+					<li>Latvia <i>Swedbank</i><span style = "padding-left:2px;">:</span><span class = "copyText" style = "padding-left:208px" id = "latviaswedbank" onclick = 'copy("latviaswedbank")'>LV10HABA0551047306931</span></li>
+				</ul>
+				<script>function copy(whatCopy) {navigator.clipboard.writeText($("#" + whatCopy).first().text());}</script>
+			</div>
+			<div class = "bodyUnderDiv" id = "aboutusdiv" style = "overflow-y:scroll; padding-top:50px; margin-top:-50px; width:90%;">
+				<h1>Familiarity</h1>
+				<p class = "aboutUsParagraph">
+					After getting acquainted with the client, our organization analyzes and discovers
+					the personal characteristics and general features of the psychological state of an
+					athlete, which can negatively affect the development and results of athletes.
+				</p>
+
+				<h1>Health</h1>
+				<p class = "aboutUsParagraph">
+					Health is one of the most important points in the list of professional aspects of
+					<b>PAP</b>, not only in regular life, but also in a professional career. In the beginning of the
+					<b>PAP</b> program we strive for the proper development of the cardiovascular system and
+					preparation for heavy loads, as well as the search for chronic injuries that negatively
+					affect the quality of life and professional career. We need to know what can interfere
+					or already prevent a player from developing in the right direction. Together we will find
+					a way to solve this problem so that in the future not one of the aforementioned aspects
+					of health does not bother the athlete.
+				</p>
+				
+				<h1>Testing</h1>
+				<p class = "aboutUsParagraph">
+					At the beginning of the cooperation with <b>PAP</b>, the athlete must pass several
+					psychological tests and a set of physical testing’s, as well as conduct certain tests on
+					the ice. The collected data and indicators will be the basis for the analysis of the
+					athlete's professional preparation. During the season, test sets will be conducted
+					repeatedly to analyze the correct direction of our client's development.
+				</p>
+				
+				<h1>Training</h1>
+				<p class = "aboutUsParagraph">
+					After conducting an in-depth analysis of the results of testing and medical
+					examinations, a personal training program necessary for development will be
+					developed for each <b>PAP</b> client. The training program is created in such a way that it
+					is maximally adapted to the client's lifestyle and is supported by individual nutrition
+					programs, sports supplements and vitamins.
+				</p>
+				
+				<h1>Lifestyle</h1>
+				<p class = "aboutUsParagraph">
+					We believe that longevity and success in a professional career depends directly
+					on all aspects of a person's life. The key to success is discipline and a good
+					understanding of your body. If necessary, <b>PAP</b> after consulting with doctors and
+					specialists, will develop specific programs for the treatment of injuries, psychological
+					problems, bad habits, etc...
+				</p>
+
+				<h1>During the season</h1>
+				<p class = "aboutUsParagraph">
+					During the season, in addition to all aspects of the athlete development
+					program, <b>PAP</b> is engaged in technical and theoretical analysis of the client's game
+					moments. Specialists review the matches and make a full analysis. One of the most
+					important aspects of post-game habits is the analysis of situations one-on-one with the
+					client, identifying mistakes and shortcomings, as well as positive aspects of the game.
+				</p>
+
+				<h1>Goals</h1>
+				<p class = "aboutUsParagraph">
+					<b>PAP</b> goals include a large spectrum, which is divided into long-term and shortterm goals. All the goals of the organization and the client are individual. The main
+					goal is - <b><i>The development of the athlete completely in all aspects</i></b>. <b>PAP</b> considers
+					as the basic goals for our cooperation: moving a player abroad, improving overall
+					physical condition, developing not only technical hockey skill, but also the development
+					of hockey IQ.
+				</p>
+			</div>
+		</div>
+	</body>
+</html>
